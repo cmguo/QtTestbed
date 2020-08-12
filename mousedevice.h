@@ -29,7 +29,10 @@ public slots:
     void wheel(QObject * target, const QPointF &point, int delta);
 
 private:
-    static QObject * mapToWindow(QObject * target, QPointF const & point, QPointF & windowPoint);
+    static QPointF posOf(QObject * target);
+
+    static QObject * mapToWindow(QObject * target, QPointF const & point,
+                                 QPointF & localPoint, QPointF & windowPoint, QPointF & screenPoint);
 };
 
 #endif // MOUSEDEVICE_H

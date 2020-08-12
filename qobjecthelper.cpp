@@ -1,6 +1,8 @@
+#include "keyboarddevice.h"
 #include "mousedevice.h"
 #include "qobjecthelper.h"
 #include "qobjectproxy.h"
+#include "watcher.h"
 
 #include <QObject>
 #include <QApplication>
@@ -9,6 +11,7 @@
 #include <QQuickWidget>
 #include <QQuickItem>
 #include <QQmlContext>
+#include <QGraphicsView>
 
 QObject * QObjectHelper::root = nullptr;
 
@@ -22,9 +25,15 @@ static QList<QObject*> defaultChildren(QObject* obj)
 
 static QList<QObject*> rootChildren(QObject*)
 {
-    if (qApp->activeWindow())
-        globalObjects[1] = qApp->activeWindow();
     return globalObjects;
+}
+
+static QList<QObject*> graphicsViewChildren(QObject* obj)
+{
+    QGraphicsView * graphicsView = qobject_cast<QGraphicsView*>(obj);
+    QList<QObject*> children = graphicsView->children();
+    children.append(graphicsView->scene());
+    return children;
 }
 
 static QList<QObject*> quickWidgetChildren(QObject* obj)
@@ -42,9 +51,11 @@ void QObjectHelper::init()
 {
     root = new RootObject;
     getChildren[&RootObject::staticMetaObject] = rootChildren;
+    getChildren[&QGraphicsView::staticMetaObject] = graphicsViewChildren;
     getChildren[&QQuickWidget::staticMetaObject] = quickWidgetChildren;
     addGlobalObject(new MouseDevice);
-    addGlobalObject(new QWidget); // active window
+    addGlobalObject(new KeyboardDevice);
+    addGlobalObject(new Watcher);
 }
 
 void QObjectHelper::addGlobalObject(QObject *obj)

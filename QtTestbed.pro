@@ -21,19 +21,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += ANYRPC_DLL
 
 SOURCES += \
+    keyboarddevice.cpp \
     mousedevice.cpp \
     qobjecthelper.cpp \
     qobjectproxy.cpp \
     qtestbed.cpp \
-    rpcfunctions.cpp
+    rpcfunctions.cpp \
+    watcher.cpp
 
 HEADERS += \
     QtTestbed_global.h \
+    keyboarddevice.h \
     mousedevice.h \
     qobjecthelper.h \
     qobjectproxy.h \
     qtestbed.h \
-    rpcfunctions.h
+    rpcfunctions.h \
+    watcher.h
 
 # Default rules for deployment.
 unix {

@@ -306,7 +306,7 @@ void RPCFunctions::invoke(Value &params, Value &result)
     execOnUiThread([&]() {
         QVariant target; toVariant(params[0], target);
         if (QObject * obj = target.value<QObject*>()) {
-            int index = obj->metaObject()->indexOfSlot(params[1].GetString());
+            int index = obj->metaObject()->indexOfMethod(params[1].GetString());
             if (index < 0)
                 return;
             Value & args = params[2];
