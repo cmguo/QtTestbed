@@ -1,17 +1,20 @@
 #include "qtestbed.h"
 #include "rpcfunctions.h"
 
-#include <anyrpc/anyrpc.h>
+#ifdef PROD_TEST
 
-#include <QObject>
+#include <anyrpc/anyrpc.h>
 
 using namespace anyrpc;
 
 static Server * server = nullptr;
 
+#endif
+
 void QTestbed::init()
 {
     QObjectHelper::init();
+#ifdef PROD_TEST
     server = new JsonHttpServer;
     MethodManager *methodManager = server->GetMethodManager();
     methodManager->AddFunction(&RPCFunctions::children, "children", "list child objects");
@@ -21,12 +24,15 @@ void QTestbed::init()
     methodManager->AddFunction(&RPCFunctions::setProperty, "setProperty", "set property");
     methodManager->AddFunction(&RPCFunctions::methods, "methods", "list methods");
     methodManager->AddFunction(&RPCFunctions::invoke, "invoke", "invoke method");
+#endif
 }
 
 void QTestbed::start()
 {
+#ifdef PROD_TEST
     server->BindAndListen(1888);
     server->StartThread();
+#endif
 }
 
 void QTestbed::addGlobalObject(QObject *obj)

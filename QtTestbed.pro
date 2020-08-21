@@ -26,7 +26,6 @@ SOURCES += \
     qobjecthelper.cpp \
     qobjectproxy.cpp \
     qtestbed.cpp \
-    rpcfunctions.cpp \
     watcher.cpp
 
 HEADERS += \
@@ -39,13 +38,21 @@ HEADERS += \
     rpcfunctions.h \
     watcher.h
 
+prod_test {
+    SOURCES += rpcfunctions.cpp
+    HEADERS += rpcfunctions.h
+}
+
 # Default rules for deployment.
 unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
 
-win32: LIBS += -L$$PWD/../thirdparty/anyrpc/lib/ -lanyrpc
+prod_test {
 
-INCLUDEPATH += $$PWD/../thirdparty/anyrpc/include
-DEPENDPATH += $$PWD/../thirdparty/anyrpc/include
+    win32: LIBS += -L$$PWD/../thirdparty/anyrpc/lib/ -lanyrpc
+
+    INCLUDEPATH += $$PWD/../thirdparty/anyrpc/include
+    DEPENDPATH += $$PWD/../thirdparty/anyrpc/include
+}
